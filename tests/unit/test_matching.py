@@ -1,4 +1,3 @@
-# tests/unit/test_matching.py
 import pytest
 from services.matching import MatchingService
 from models.loan_request import LoanRequest
@@ -12,6 +11,7 @@ from models.loan_request import LoanRequest
 from models import BusinessCredit, MatchResult
 from models import PersonalGuarantor
 from utils.enums import FeatureType, PolicyWeight
+
 
 @pytest.fixture
 def loan_with_business(db_session):
@@ -28,15 +28,13 @@ def loan_with_business(db_session):
 
     # optional: add credit info
     credit = BusinessCredit(
-        business_id=business.id,
-        paynet_score=750,
-        trade_line_count=3
+        business_id=business.id, paynet_score=750, trade_line_count=3
     )
     guarantor = PersonalGuarantor(
         business_id=business.id,
         fico_score=720,
         has_bankruptcy=False,
-        has_tax_liens=False
+        has_tax_liens=False,
     )
     db_session.add_all([credit, guarantor])
 
@@ -46,19 +44,24 @@ def loan_with_business(db_session):
         amount=100000,
         term_months=36,
         equipment_type="Tractor",
-        equipment_year=2018
+        equipment_year=2018,
     )
     db_session.add(loan)
     features = [
-        BusinessFeature(business_id=business.id, feature_type=FeatureType.FICO, value=720),
-        BusinessFeature(business_id=business.id, feature_type=FeatureType.YEARS_IN_BUSINESS, value=5),
-        BusinessFeature(business_id=business.id, feature_type=FeatureType.REVENUE, value=500000),
+        BusinessFeature(
+            business_id=business.id, feature_type=FeatureType.FICO, value=720
+        ),
+        BusinessFeature(
+            business_id=business.id, feature_type=FeatureType.YEARS_IN_BUSINESS, value=5
+        ),
+        BusinessFeature(
+            business_id=business.id, feature_type=FeatureType.REVENUE, value=500000
+        ),
     ]
     db_session.add_all(features)
     db_session.commit()
     db_session.refresh(loan)
     return loan
-
 
 
 @pytest.fixture

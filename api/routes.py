@@ -1,4 +1,3 @@
-# api/routes.py
 from fastapi import APIRouter
 
 from api.business import router as business_router

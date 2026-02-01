@@ -2,11 +2,13 @@ from typing import List, Optional, Any
 from pydantic import BaseModel, Field, ConfigDict
 from enum import Enum
 from utils.enums import PolicyWeight
+from pydantic import BaseModel, Field
+from typing import List, Optional
+
 
 # -------- Lender --------
 class LenderCreate(BaseModel):
     name: str
-    # is_active: bool = True
 
 
 class LenderOut(LenderCreate):
@@ -15,10 +17,6 @@ class LenderOut(LenderCreate):
     model_config = ConfigDict(
         from_attributes=True,
     )
-
-# api/schemas.py
-from pydantic import BaseModel, Field
-from typing import List, Optional
 
 
 # -------- Lender Program --------
@@ -38,11 +36,12 @@ class LenderProgramOut(LenderProgramCreate):
 # -------- Policy Rule --------
 class PolicyRuleCreate(BaseModel):
     program_id: int
-    rule_type: str   # use enums.RuleType
-    operator: str    # >=, <=, in, not_in
+    rule_type: str  # use enums.RuleType
+    operator: str  # >=, <=, in, not_in
     value: Any
     weight: int = PolicyWeight.MEDIUM
     is_hard: bool = False
+
 
 class PolicyRuleUpdate(BaseModel):
     rule_type: Optional[str] = None

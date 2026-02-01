@@ -1,6 +1,3 @@
-
-
-
 def test_create_business(client):
     payload = {
         "legal_name": "Acme Pvt Ltd",
@@ -11,12 +8,9 @@ def test_create_business(client):
         "guarantor": {
             "fico_score": 720,
             "has_bankruptcy": False,
-            "has_tax_liens": False
+            "has_tax_liens": False,
         },
-        "credit": {
-            "paynet_score": 85.5,
-            "trade_line_count": 10
-        }
+        "credit": {"paynet_score": 85.5, "trade_line_count": 10},
     }
 
     resp = client.post("/businesses/", json=payload)

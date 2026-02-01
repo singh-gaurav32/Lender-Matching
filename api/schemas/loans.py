@@ -17,15 +17,9 @@ class LoanOut(LoanCreate):
 
     model_config = ConfigDict(
         from_attributes=True,
-        # ... other config options ...
     )
 
 
-
-
-# -----------------------------
-# Loan Request
-# -----------------------------
 class LoanRequestCreate(BaseModel):
     business_id: int
     amount: float
@@ -33,10 +27,10 @@ class LoanRequestCreate(BaseModel):
     equipment_type: str
     equipment_year: int
 
+
 class LoanRequestOut(LoanRequestCreate):
     id: int
     status: LoanStatus
     model_config = ConfigDict(
         from_attributes=True,
-        # ... other config options ...
     )

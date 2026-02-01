@@ -2,10 +2,15 @@
 
 import pytest
 from models import (
-    Business, PersonalGuarantor, BusinessCredit, LoanRequest,
-    PolicyRule,LenderProgram
+    Business,
+    PersonalGuarantor,
+    BusinessCredit,
+    LoanRequest,
+    PolicyRule,
+    LenderProgram,
 )
 from utils.enums import LoanStatus, PolicyWeight
+
 
 @pytest.fixture
 def business(db_session):
@@ -40,6 +45,7 @@ def business(db_session):
 
     return b
 
+
 @pytest.fixture
 def loan_request(db_session, business):
     loan = LoanRequest(
@@ -54,6 +60,7 @@ def loan_request(db_session, business):
     db_session.commit()
     db_session.refresh(loan)
     return loan
+
 
 @pytest.fixture
 def lender_program(db_session):
@@ -81,8 +88,7 @@ def lender_program(db_session):
     return program
 
 
-
-def test_create_loan(client, business:Business):
+def test_create_loan(client, business: Business):
     payload = {
         "business_id": business.id,
         "amount": 500000,
@@ -103,6 +109,7 @@ def test_create_loan(client, business:Business):
     assert data["equipment_type"] == "excavator"
     assert data["equipment_year"] == 2021
     assert data["status"] == "draft"
+
 
 def test_initiate_match_actual_run(client, loan_request, db_session, lender_program):
     assert loan_request.status == LoanStatus.DRAFT
@@ -140,11 +147,8 @@ def test_initiate_match_actual_run(client, loan_request, db_session, lender_prog
         .filter(MatchResult.loan_request_id == loan_request.id)
         .all()
     )
-    
+
     assert len(matches) > 0
     first_match = matches[0]
     assert first_match.eligible == True
     assert first_match.fit_score == 80.0
-
-
-

@@ -1,11 +1,16 @@
-
 import pytest
 from models import (
-    Business, PersonalGuarantor, BusinessCredit, LoanRequest,
-    PolicyRule,LenderProgram,
-    BusinessFeature, MatchResult
+    Business,
+    PersonalGuarantor,
+    BusinessCredit,
+    LoanRequest,
+    PolicyRule,
+    LenderProgram,
+    BusinessFeature,
+    MatchResult,
 )
 from utils.enums import LoanStatus, PolicyWeight
+
 
 @pytest.fixture
 def business(db_session):
@@ -40,6 +45,7 @@ def business(db_session):
 
     return b
 
+
 @pytest.fixture
 def loan_request(db_session, business):
     loan = LoanRequest(
@@ -54,6 +60,7 @@ def loan_request(db_session, business):
     db_session.commit()
     db_session.refresh(loan)
     return loan
+
 
 @pytest.fixture
 def lender_program(db_session):
@@ -84,9 +91,7 @@ def lender_program(db_session):
 @pytest.fixture
 def business_feature(db_session, loan_request):
     feature = BusinessFeature(
-        loan_request_id=loan_request.id,
-        key="fico_score",
-        value=720
+        loan_request_id=loan_request.id, key="fico_score", value=720
     )
     db_session.add(feature)
     db_session.commit()
@@ -101,7 +106,7 @@ def match_result(db_session, loan_request, lender_program):
         lender_id=1,
         program_id=lender_program.id,
         fit_score=95.0,
-        eligible=True
+        eligible=True,
     )
     db_session.add(result)
     db_session.commit()
@@ -111,10 +116,11 @@ def match_result(db_session, loan_request, lender_program):
 
 def test_get_loan_matches(client, db_session, loan_request, match_result):
     from utils.enums import LoanStatus
+
     loan_request.status = LoanStatus.PROCESSING
     match_result.loan_request_id = loan_request.id
     loan_request.business
-    db_session.commit() 
+    db_session.commit()
 
     resp = client.get(f"/loans/{loan_request.id}/matches")
 

@@ -6,6 +6,7 @@ from api.schemas import BusinessCreate, BusinessOut
 
 router = APIRouter()
 
+
 @router.post("/", response_model=BusinessOut)
 def create_business(business_in: BusinessCreate, db: Session = Depends(get_db)):
     # Basic validations
@@ -23,7 +24,7 @@ def create_business(business_in: BusinessCreate, db: Session = Depends(get_db)):
         industry=business_in.industry,
         state=business_in.state,
         years_in_business=business_in.years_in_business,
-        annual_revenue=business_in.annual_revenue
+        annual_revenue=business_in.annual_revenue,
     )
     db.add(business)
     db.commit()
@@ -34,49 +35,3 @@ def create_business(business_in: BusinessCreate, db: Session = Depends(get_db)):
     db.add_all([g, c])
     db.commit()
     return business
-
-# # -----------------------------
-# # Get business
-# # -----------------------------
-# @router.get("/{business_id}", response_model=BusinessOut)
-# def get_business(business_id: int, db: Session = Depends(get_db)):
-#     business = db.get(Business, business_id)
-#     if not business:
-#         raise HTTPException(status_code=404, detail="Business not found")
-#     return business
-
-# # -----------------------------
-# # Update business
-# # -----------------------------
-# @router.put("/{business_id}", response_model=BusinessOut)
-# def update_business(business_id: int, business_in: BusinessCreate, db: Session = Depends(get_db)):
-#     business = db.get(Business, business_id)
-#     if not business:
-#         raise HTTPException(status_code=404, detail="Business not found")
-
-#     for field, value in business_in.dict(exclude={"guarantor", "credit"}).items():
-#         setattr(business, field, value)
-
-#     # Update nested guarantor
-#     for field, value in business_in.guarantor.dict().items():
-#         setattr(business.guarantor, field, value)
-
-#     # Update nested credit
-#     for field, value in business_in.credit.dict().items():
-#         setattr(business.credit, field, value)
-
-#     db.commit()
-#     db.refresh(business)
-#     return business
-
-# # -----------------------------
-# # Delete business
-# # -----------------------------
-# @router.delete("/{business_id}")
-# def delete_business(business_id: int, db: Session = Depends(get_db)):
-#     business = db.get(Business, business_id)
-#     if not business:
-#         raise HTTPException(status_code=404, detail="Business not found")
-#     db.delete(business)
-#     db.commit()
-#     return {"detail": "Business deleted"}

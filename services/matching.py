@@ -1,6 +1,7 @@
 from models import LoanRequest, LenderProgram, MatchResult, RuleResult
 from utils.enums import FeatureType, LoanStatus
 
+
 class MatchingService:
     def __init__(self, db_session):
         self.db = db_session
@@ -19,7 +20,7 @@ class MatchingService:
                 program_id=program.id,
                 eligible=True,
                 fit_score=0.0,
-                summary=[]
+                summary=[],
             )
             self.db.add(match_result)
             fit_score = 0
@@ -28,22 +29,24 @@ class MatchingService:
                 if rule.is_hard:
                     passed, score_delta, reason = False, 0, f"{feature.val} not allowed"
                 else:
-                    passed, score_delta, reason = self._evaluate_rule(rule, feature, loan)
+                    passed, score_delta, reason = self._evaluate_rule(
+                        rule, feature, loan
+                    )
                 # record rule result
                 rule_result = RuleResult(
                     match_result_id=match_result.id,
                     rule_id=rule.id,
                     passed=passed,
                     reason=reason,
-                    score_delta=score_delta
+                    score_delta=score_delta,
                 )
                 self.db.add(rule_result)
-                
+
                 if not passed:
                     match_result.eligible = False
                     match_result.summary.append(reason)
                 fit_score += score_delta
-            match_result.fit_score = (fit_score / (len(program.rules)* 5)) * 100
+            match_result.fit_score = (fit_score / (len(program.rules) * 5)) * 100
             results.append(match_result)
 
         self.db.commit()
@@ -63,7 +66,15 @@ class MatchingService:
             "equipment": FeatureType.EQUIPMENT_AGE,
         }
         ft = mapping.get(rule_type)
-        if ft in [FeatureType.FICO, FeatureType.PAYNET, FeatureType.YEARS_IN_BUSINESS, FeatureType.REVENUE, FeatureType.INDUSTRY, FeatureType.STATE, FeatureType.EQUIPMENT_AGE]:
+        if ft in [
+            FeatureType.FICO,
+            FeatureType.PAYNET,
+            FeatureType.YEARS_IN_BUSINESS,
+            FeatureType.REVENUE,
+            FeatureType.INDUSTRY,
+            FeatureType.STATE,
+            FeatureType.EQUIPMENT_AGE,
+        ]:
             return next((f for f in business.features if f.feature_type == ft), None)
         return None
 

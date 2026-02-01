@@ -4,6 +4,7 @@ from services.matching import MatchingService
 from debs import get_db
 from sqlalchemy.orm import Session
 
+
 class LoanWorkflowService:
     @staticmethod
     def run(loan: LoanRequest, db: Session):

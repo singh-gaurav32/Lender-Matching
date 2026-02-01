@@ -1,5 +1,3 @@
-
-
 def test_create_lender(client):
     resp = client.post(
         "/lenders",
@@ -13,15 +11,13 @@ def test_create_lender(client):
     assert "id" in data
 
 
-
-
 def test_add_program_success(client):
     lender = client.post(
         "/lenders",
         json={"name": "XYZ Finance"},
     ).json()
 
-    payload = {"name": "Program A", "lender_id":lender["id"]}
+    payload = {"name": "Program A", "lender_id": lender["id"]}
 
     res = client.post(f"lenders/{lender["id"]}/programs", json=payload)
     assert res.status_code == 200
@@ -29,16 +25,18 @@ def test_add_program_success(client):
     assert "id" in data
     assert data["lender_id"] == lender["id"]
     assert data["name"] == "Program A"
-    
+
 
 def test_add_lender_rules(client):
     lender = client.post(
         "/lenders",
         json={"name": "XYZ Finance", "type": "nbfc"},
     ).json()
-    program_payload = {"name": "Program A", "lender_id":lender["id"]}
+    program_payload = {"name": "Program A", "lender_id": lender["id"]}
 
-    program = client.post(f"lenders/{lender["id"]}/programs", json=program_payload).json()
+    program = client.post(
+        f"lenders/{lender["id"]}/programs", json=program_payload
+    ).json()
 
     rules_payload = [
         {
@@ -46,7 +44,7 @@ def test_add_lender_rules(client):
             "rule_type": "fico",
             "operator": ">=",
             "value": "700",
-            "weight": 3
+            "weight": 3,
         }
     ]
 
@@ -85,9 +83,11 @@ def test_update_lender_rule(client):
         "/lenders",
         json={"name": "XYZ Finance", "type": "nbfc"},
     ).json()
-    program_payload = {"name": "Program A", "lender_id":lender["id"]}
+    program_payload = {"name": "Program A", "lender_id": lender["id"]}
 
-    program = client.post(f"lenders/{lender["id"]}/programs", json=program_payload).json()
+    program = client.post(
+        f"lenders/{lender["id"]}/programs", json=program_payload
+    ).json()
 
     rules_payload = [
         {
@@ -95,7 +95,7 @@ def test_update_lender_rule(client):
             "rule_type": "fico",
             "operator": ">=",
             "value": "700",
-            "weight": 3
+            "weight": 3,
         }
     ]
 
@@ -109,7 +109,6 @@ def test_update_lender_rule(client):
         f"/lenders/rules/{rule['id']}",
         json={"value": 750000},
     )
-    
 
     assert resp.status_code == 200
     assert resp.json()["value"] == 750000

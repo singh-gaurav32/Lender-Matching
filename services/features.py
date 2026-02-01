@@ -12,6 +12,7 @@ FEATURE_SOURCES = {
     FeatureType.EQUIPMENT_AGE: lambda b, l: date.today().year - l.equipment_year,
 }
 
+
 class FeatureService:
     def __init__(self, db_session):
         self.db = db_session
@@ -24,7 +25,9 @@ class FeatureService:
         for ft, func in FEATURE_SOURCES.items():
             val = func(business, loan)
             if val is not None:
-                features.append(BusinessFeature(business_id=business.id, feature_type=ft, value=val))
+                features.append(
+                    BusinessFeature(business_id=business.id, feature_type=ft, value=val)
+                )
                 self.db.add(features[-1])
 
         self.db.commit()
