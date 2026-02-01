@@ -101,5 +101,7 @@ class MatchingService:
         elif op == "not_in" and val in target:
             passed = False
             reason = f"{rule.rule_type} {val} in {target}"
+        elif op == "json":
+            pass  # implement complex JSON logic if needed
 
         return passed, score_delta if passed else 0, reason
