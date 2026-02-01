@@ -11,3 +11,5 @@ wheels/
 pdfs
 parsed_pdfs
 *.db
+
+.memory

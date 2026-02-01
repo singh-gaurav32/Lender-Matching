@@ -16,12 +16,8 @@ class LenderProgram(Base):
     id = Column(Integer, primary_key=True, index=True)
     lender_id = Column(Integer, ForeignKey("lenders.id"))
     name = Column(String, nullable=False)
-    min_amount = Column(Float)
-    max_amount = Column(Float)
     rules = relationship("PolicyRule", back_populates="program")
     lender = relationship("Lender", back_populates="programs")
-
-
 
 
 

@@ -1,16 +1,17 @@
 from models import LoanRequest, LenderProgram, MatchResult, RuleResult
-from utils.enums import FeatureType
+from utils.enums import FeatureType, LoanStatus
 
 class MatchingService:
     def __init__(self, db_session):
         self.db = db_session
 
     def match_loan(self, loan_request_id: int):
-        loan = self.db.get(LoanRequest, loan_request_id)
+        loan: LoanRequest = self.db.get(LoanRequest, loan_request_id)
+        loan.status = LoanStatus.PROCESSING
+        self.db.commit()
         business = loan.business
         programs = self.db.query(LenderProgram).all()
         results = []
-
         for program in programs:
             match_result = MatchResult(
                 loan_request_id=loan.id,
@@ -45,6 +46,8 @@ class MatchingService:
             match_result.fit_score = (fit_score / (len(program.rules)* 5)) * 100
             results.append(match_result)
 
+        self.db.commit()
+        loan.status = LoanStatus.COMPLETED
         self.db.commit()
         return results
 

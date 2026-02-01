@@ -5,6 +5,7 @@ from enum import Enum
 # Match Result
 # -----------------------------
 class MatchResultOut(BaseModel):
+    loan_request_id: int
     lender_id: int
     program_id: int
     eligible: bool
@@ -13,5 +14,4 @@ class MatchResultOut(BaseModel):
 
     model_config = ConfigDict(
         from_attributes=True,
-        # ... other config options ...
     )

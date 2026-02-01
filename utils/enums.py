@@ -29,3 +29,10 @@ class PolicyWeight(IntEnum):
     LOW = 1
     MEDIUM = 3
     HIGH = 5
+
+
+class LoanStatus(str, Enum):
+    DRAFT = "draft"
+    SUBMITTED = "submitted"
+    PROCESSING = "processing"
+    COMPLETED = "completed"

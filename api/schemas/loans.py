@@ -1,14 +1,6 @@
 from typing import List, Optional
 from pydantic import BaseModel, Field, ConfigDict
-from enum import Enum
-from .business import BusinessCreate
-
-# -------- Loan --------
-class LoanStatus(str, Enum):
-    CREATED = "created"
-    UNDER_REVIEW = "under_review"
-    MATCHED = "matched"
-    REJECTED = "rejected"
+from utils.enums import LoanStatus
 
 
 class LoanCreate(BaseModel):
@@ -35,7 +27,7 @@ class LoanOut(LoanCreate):
 # Loan Request
 # -----------------------------
 class LoanRequestCreate(BaseModel):
-    business: BusinessCreate
+    business_id: int
     amount: float
     term_months: int
     equipment_type: str
@@ -43,7 +35,7 @@ class LoanRequestCreate(BaseModel):
 
 class LoanRequestOut(LoanRequestCreate):
     id: int
-
+    status: LoanStatus
     model_config = ConfigDict(
         from_attributes=True,
         # ... other config options ...

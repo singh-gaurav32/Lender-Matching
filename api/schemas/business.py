@@ -1,26 +1,6 @@
 # api/schemas.py
 from pydantic import BaseModel, Field, ConfigDict
-from enum import Enum
-from typing import Optional, List, Dict
-
-# -------- Business --------
-class BusinessCreate(BaseModel):
-    legal_name: str
-    industry: str
-    state: str
-    years_in_business: int = Field(ge=0)
-    annual_revenue: float = Field(gt=0)
-    pan: str  # business uniqueness (India)
-
-
-class BusinessOut(BusinessCreate):
-    id: int
-
-    model_config = ConfigDict(
-        from_attributes=True,
-        # ... other config options ...
-    )
-
+from typing import Optional, List
 
 # -----------------------------
 # Personal Guarantor
@@ -33,10 +13,8 @@ class PersonalGuarantorCreate(BaseModel):
 class PersonalGuarantorOut(PersonalGuarantorCreate):
     id: int
 
-    model_config = ConfigDict(
-        from_attributes=True,
-        # ... other config options ...
-    )
+    model_config = ConfigDict(from_attributes=True)
+
 
 # -----------------------------
 # Business Credit
@@ -48,27 +26,37 @@ class BusinessCreditCreate(BaseModel):
 class BusinessCreditOut(BusinessCreditCreate):
     id: int
 
-    model_config = ConfigDict(
-        from_attributes=True,
-        # ... other config options ...
-    )
+    model_config = ConfigDict(from_attributes=True)
+
 
 # -----------------------------
-# Business / Borrower
+# Business Feature (if needed)
+# -----------------------------
+class BusinessFeatureCreate(BaseModel):
+    name: str
+    value: str
+
+class BusinessFeatureOut(BusinessFeatureCreate):
+    id: int
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+# -----------------------------
+# Business
 # -----------------------------
 class BusinessCreate(BaseModel):
     legal_name: str
     industry: str
     state: str
-    years_in_business: int
-    annual_revenue: float
-    guarantor: PersonalGuarantorCreate
-    credit: BusinessCreditCreate
+    years_in_business: int = Field(ge=0)
+    annual_revenue: float = Field(gt=0)
+    guarantor: Optional[PersonalGuarantorCreate] = None
+    credit: Optional[BusinessCreditCreate] = None
 
 class BusinessOut(BusinessCreate):
     id: int
+    guarantor: Optional[PersonalGuarantorOut] = None
+    credit: Optional[BusinessCreditOut] = None
 
-    model_config = ConfigDict(
-        from_attributes=True,
-        # ... other config options ...
-    )
+    model_config = ConfigDict(from_attributes=True)

@@ -1,11 +1,12 @@
-from typing import List, Optional
+from typing import List, Optional, Any
 from pydantic import BaseModel, Field, ConfigDict
 from enum import Enum
+from utils.enums import PolicyWeight
 
 # -------- Lender --------
 class LenderCreate(BaseModel):
     name: str
-    is_active: bool = True
+    # is_active: bool = True
 
 
 class LenderOut(LenderCreate):
@@ -13,26 +14,7 @@ class LenderOut(LenderCreate):
 
     model_config = ConfigDict(
         from_attributes=True,
-        # ... other config options ...
     )
-
-
-# -------- Lender Rules --------
-class RuleCreate(BaseModel):
-    rule_type: str          # use enums.RuleType
-    operator: str           # >=, <=, ==, in
-    value: str              # stored raw, interpreted later
-
-
-class RuleOut(RuleCreate):
-    id: int
-    lender_id: int
-
-    model_config = ConfigDict(
-        from_attributes=True,
-        # ... other config options ...
-    )
-
 
 # api/schemas.py
 from pydantic import BaseModel, Field
@@ -43,8 +25,6 @@ from typing import List, Optional
 class LenderProgramCreate(BaseModel):
     lender_id: int
     name: str
-    description: Optional[str] = None
-    is_active: bool = True
 
 
 class LenderProgramOut(LenderProgramCreate):
@@ -52,7 +32,6 @@ class LenderProgramOut(LenderProgramCreate):
 
     model_config = ConfigDict(
         from_attributes=True,
-        # ... other config options ...
     )
 
 
@@ -61,8 +40,18 @@ class PolicyRuleCreate(BaseModel):
     program_id: int
     rule_type: str   # use enums.RuleType
     operator: str    # >=, <=, in, not_in
-    value: str       # store raw; parsed later
-    weight: float = 1.0
+    value: Any
+    weight: int = PolicyWeight.MEDIUM
+    is_hard: bool = False
+
+class PolicyRuleUpdate(BaseModel):
+    rule_type: Optional[str] = None
+    operator: Optional[str] = None
+    value: Optional[Any] = None
+    weight: Optional[int] = None
+    is_hard: Optional[bool] = None
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class PolicyRuleOut(PolicyRuleCreate):
@@ -70,7 +59,6 @@ class PolicyRuleOut(PolicyRuleCreate):
 
     model_config = ConfigDict(
         from_attributes=True,
-        # ... other config options ...
     )
 
 

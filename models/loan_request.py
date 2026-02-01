@@ -2,13 +2,7 @@ from database.session import Base
 from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, JSON, INTEGER, Enum as SQLEnum
 from sqlalchemy.orm import relationship
 from enum import Enum
-
-class LoanStatus(str, Enum):
-    DRAFT = "draft"
-    SUBMITTED = "submitted"
-    APPROVED = "approved"
-    REJECTED = "rejected"
-    PROCESSING = "processing"
+from utils.enums import LoanStatus
 
 
 class LoanRequest(Base):
