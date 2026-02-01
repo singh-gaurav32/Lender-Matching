@@ -5,8 +5,8 @@
 ### 1. Clone Repository
 
 ```bash
-git clone <repo_url>
-cd <repo_folder>
+git clone https://github.com/singh-gaurav32/Lender-Matching.git
+cd Lender-Matching
 ```
 
 ### 2. Create Virtual Environment
